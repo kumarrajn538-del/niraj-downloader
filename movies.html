@@ -143,78 +143,87 @@ footer {
 
 <footer>
     <p>Desi Movies ka Adda - <span class="owner-name">Baba Cinema</span></p>
-    <p>© 2026 | Made with ❤️ by the Legend</p>
+    <p>© 2026 | Made with ❤️ by the niraj </p>
 </footer>
-
 <script>
-    // 🔴 IMPORTANT: Niche 'PASTE_YOUR_API_KEY_HERE' ki jagah apni Key paste karo!
-const API_KEY ='AIzaSyDqv_zlB_FUZVT4IarpXllYPuMusLjTFBk';
-    async function searchMovies() {
-        const query = document.getElementById('searchInput').value;
+    // 🔑 TERI ASLI CHABI (Direct aur Simple)
+    const API_KEY = 'AIzaSyDqv_zlB_FUZVT4IarpXllYPuMusLjTFBk'; 
+
+    // 🚀 STEP 1: Page khulte hi apne aap movies load ho jayengi (Suggestion wapas aa gaya!)
+    window.onload = function() {
+        searchMovies('New South Indian Hindi Dubbed Action Movies 2025');
+    };
+
+    // 🔍 STEP 2: Movies search karne ka function
+    async function searchMovies(queryText) {
+        const inputVal = document.getElementById('searchInput').value;
+        const query = queryText || inputVal; // Agar button dabaya to wo, nahi to search box
         const container = document.getElementById('movies-container');
-        
-        // 1. Agar user ne kuch likha nahi toh daant lagao 😂
+
         if (!query) {
-            alert("Bhai, kuch likhoge tabhi toh dikhaunga! 😅");
+            alert("Bhai, kuch likhoge tabhi toh dikhaunga! 😂");
             return;
         }
 
-        // 2. Loading... dikhao jab tak data aa raha hai
-        container.innerHTML = '<h3 style="color:white;">Popcorn ready ho rahe hain... 🍿 (Loading)</h3>';
+        // Loading dikhao...
+        container.innerHTML = '<h3 style="color:white; text-align:center; margin-top:20px;">🍿 Popcorn ready kar raha hoon...</h3>';
 
         try {
-            // 3. YouTube Server ko call lagana (Magic Line ✨)
-            // Hum query ke aage "full movie" jod rahe hain taaki trailers kam aayein
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=9&q=${query} full movie&type=video&key=${API_KEY}`;
-
+            // YouTube API ko call lagao
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=${encodeURIComponent(query)}&type=video&key=${API_KEY}`;
+            
             const response = await fetch(url);
             const data = await response.json();
 
-            container.innerHTML = ''; // Loading hatao
-
-            // Agar koi error aaya (Jaise key galat hai)
+            // Agar koi error aaya (Jaise Quota ya Key ka locha)
             if (data.error) {
-                console.error("Error:", data.error);
-                container.innerHTML = `<p style="color:red;">Gadbad ho gayi: ${data.error.message}</p>`;
+                console.error("YouTube Error:", data.error);
+                container.innerHTML = `<p style="color:red; text-align:center;">⚠️ Error: ${data.error.message}</p>`;
                 return;
             }
 
-            // Agar koi movie nahi mili
-            if (data.items.length === 0) {
-                container.innerHTML = '<p>Koi movie nahi mili boss! 🤷‍♂️</p>';
-                return;
-            }
+            container.innerHTML = ''; // Purana kachra saaf
 
-            // 4. Movies ko screen pe sajana
+            // Har video ke liye card banao
             data.items.forEach(item => {
-                const title = item.snippet.title;
                 const videoId = item.id.videoId;
-                const thumb = item.snippet.thumbnails.medium.url;
+                const title = item.snippet.title;
+                const thumbnail = item.snippet.thumbnails.medium.url; // High quality thumbnail
 
-const movieCard = `
-    <div class="movie-card">
-        <iframe width="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-        <h3 style="font-size: 16px; margin-top: 10px;">${title}</h3>
-        <div class="movie-actions" style="display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #444;">
-            <button onclick="alert('Liked!')" style="background: none; color: white; border: none; cursor: pointer;">👍 Like</button>
-            <button onclick="alert('Link Copied!')" style="background: none; color: white; border: none; cursor: pointer;">📤 Share</button>
-            <button onclick="window.open('https://en.savefrom.net/','_blank')" style="background: #e50914; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">📥 Download</button>
-        </div>
-    </div>
-`;
-
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                // Niche wala code thumbnail dikhayega, click karne par video chalega
+                card.innerHTML = `
+                    <div class="thumbnail-container" onclick="playVideo(this, '${videoId}')">
+                        <img src="${thumbnail}" alt="${title}" style="width:100%; border-radius:10px;">
+                        <div class="play-btn" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -5nirsj0%); font-size:50px; cursor:pointer;">▶️</div>
+                    </div>
+                    <h4 style="color:white; font-size:14px; margin-top:10px;">${title}</h4>
+                `;
+                container.appendChild(card);
+            });
 
         } catch (error) {
-            console.log(error);
-            container.innerHTML = '<p style="color:red;">Net nahi chal raha ya Quota khatam! 🚫</p>';
+            console.error("Network Error:", error);
+            container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Internet check kar bhai!</p>';
         }
     }
-    // Ye code paste karo
-function filterCategory(term) {
-    document.getElementById('searchInput').value = term;
-    searchMovies();
-}
-// Ye line script tag band hone se pehle daal do
-window.onload = () => filterCategory('New South Indian Action Movie Hindi Dubbed');
 
+    // ▶️ STEP 3: Click karne par video play karne wala function
+    function playVideo(element, videoId) {
+        element.innerHTML = `
+            <iframe width="100%" height="200" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
+            style="border-radius:10px;">
+            </iframe>
+        `;
+    }
+
+    // 🔘 STEP 4: Category buttons ke liye function
+    function filterCategory(category) {
+        searchMovies(category);
+    }
+</script>
+    
 </script>
