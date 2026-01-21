@@ -170,8 +170,9 @@ footer {
 
         try {
             // YouTube API ko call lagao
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=${encodeURIComponent(query)}&type=video&key=${API_KEY}`;
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=${encodeURIComponent(query)}&type=video&videoEmbeddable=true&key=${API_KEY}`;
             
+        
             const response = await fetch(url);
             const data = await response.json();
 
@@ -209,19 +210,15 @@ footer {
         }
     }
 
-    // ▶️ STEP 3: Click karne par video play karne wala function
-    function playVideo(element, videoId) {
-        element.innerHTML = `
-            <iframe width="100%" height="200" 
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
-            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
-            style="border-radius:10px;">
-            </iframe>
-        `;
-    }
-
-    // 🔘 STEP 4: Category buttons ke liye function
-    function filterCategory(category) {
-        searchMovies(category);
-    }
+// 🔥 Ye function video play karta hai (Neeche wala updated code hai)
+function playVideo(element, videoId) {
+    element.innerHTML = `
+        <iframe width="100%" height="200" 
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${window.location.origin}" 
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
+        style="border-radius:10px;">
+        </iframe>
+    `;
+}
+    
 </script>
