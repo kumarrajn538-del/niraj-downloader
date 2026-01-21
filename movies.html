@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baba Cinema - Free Movies</title>
+    <meta name="referrer" content="no-referrer">
+
+    <style>
+        /* Thoda sa makeup (CSS) taaki site ugly na lage */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a; /* Dark Mode (Kyuki hum coders hain!) */
+            color: white;
+            text-align: center;
+        }
+        header {
+            background-color: #e50914; /* Netflix Red vibe */
+            padding: 20px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .search-box {
+            margin: 30px;
+        }
+        input {
+            padding: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #b20710;
+        }
+        /* Yahan movies aayengi */
+#movies-container {
+    display: flex;
+    flex-direction: column; /* Isse videos ek ke niche ek aayenge */
+    gap: 20px;
+    padding: 15px;
+}
+
+
+.movie-card {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    transition: transform 0.3s; /* Click karne par mast effect aayega */
+    cursor: pointer; /* Taaki pata chale ki ye click hoga */
+}
+
+.movie-card:hover {
+    transform: scale(1.02); /* Thoda sa bada hoga jab ungli le jaoge */
+}
+
+        .movie-card h3 {
+    font-size: 13px; /* Mobile screen ke liye best size */
+    margin: 8px 5px;
+    height: 36px; /* Do lines se zyada bada nahi hoga */
+    overflow: hidden; 
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Bada naam hone par '...' dikhega */
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+}
+
+iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9; 
+    height: auto; 
+    border-radius: 5px;
+}
+
+.category-buttons {
+
+    margin: 15px 0;
+}
+.cat-btn {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 8px 15px;
+    margin: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+.cat-btn:hover {
+    background-color: #e50914;
+    border-color: #e50914;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #111;
+    color: #888;
+    margin-top: 30px;
+    border-top: 1px solid #333;
+    font-size: 14px;
+}
+.owner-name {
+    color: #e50914; /* Netflix wala mast lal color */
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎬 Baba Cinema 🍿</h1>
+        <p>Unlimited Legal Movies Search Engine</p>
+    </header>
+    
+    <div class="search-box">
+      
+        <input type="text" id="searchInput" placeholder="Search movie (e.g. South Action)...">
+        <button onclick="searchMovies()">Search</button>
+    </div>
+    <div class="category-buttons">
+    <button class="cat-btn" onclick="filterCategory('New South Indian Action Movie Hindi Dubbed')">👊 South Action</button>
+    <button class="cat-btn" onclick="filterCategory('Best Hindi Comedy Movies')">😂 Comedy</button>
+    <button class="cat-btn" onclick="filterCategory('Horror Movies Hindi Full')">👻 Horror</button>
+    <button class="cat-btn" onclick="filterCategory('Old Classic Hindi Movies')">📼 Old is Gold</button>
+    <button class="cat-btn" onclick="filterCategory('Motivational Movies Hindi')">💪 Motivation</button>
+</div>
+
+<div id="movies-container"></div>
+
+<footer>
+    <p>Desi Movies ka Adda - <span class="owner-name">Baba Cinema</span></p>
+    <p>© 2026 | Made with ❤️ by the Legend</p>
+</footer>
+
+<script>
+    // 🔴 IMPORTANT: Niche 'PASTE_YOUR_API_KEY_HERE' ki jagah apni Key paste karo!
+const API_KEY ='AIzaSyDUzFbCGINxOMjqfKs3FVh0Rnjqiedl7PI';
+    async function searchMovies() {
+        const query = document.getElementById('searchInput').value;
+        const container = document.getElementById('movies-container');
+        
+        // 1. Agar user ne kuch likha nahi toh daant lagao 😂
+        if (!query) {
+            alert("Bhai, kuch likhoge tabhi toh dikhaunga! 😅");
+            return;
+        }
+
+        // 2. Loading... dikhao jab tak data aa raha hai
+        container.innerHTML = '<h3 style="color:white;">Popcorn ready ho rahe hain... 🍿 (Loading)</h3>';
+
+        try {
+            // 3. YouTube Server ko call lagana (Magic Line ✨)
+            // Hum query ke aage "full movie" jod rahe hain taaki trailers kam aayein
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=9&q=${query} full movie&type=video&key=${API_KEY}`;
+
+            const response = await fetch(url);
+            const data = await response.json();
+
+            container.innerHTML = ''; // Loading hatao
+
+            // Agar koi error aaya (Jaise key galat hai)
+            if (data.error) {
+                console.error("Error:", data.error);
+                container.innerHTML = `<p style="color:red;">Gadbad ho gayi: ${data.error.message}</p>`;
+                return;
+            }
+
+            // Agar koi movie nahi mili
+            if (data.items.length === 0) {
+                container.innerHTML = '<p>Koi movie nahi mili boss! 🤷‍♂️</p>';
+                return;
+            }
+
+            // 4. Movies ko screen pe sajana
+            data.items.forEach(item => {
+                const title = item.snippet.title;
+                const videoId = item.id.videoId;
+                const thumb = item.snippet.thumbnails.medium.url;
+
+const movieCard = `
+    <div class="movie-card">
+        <iframe width="100%" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+        <h3 style="font-size: 16px; margin-top: 10px;">${title}</h3>
+        <div class="movie-actions" style="display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #444;">
+            <button onclick="alert('Liked!')" style="background: none; color: white; border: none; cursor: pointer;">👍 Like</button>
+            <button onclick="alert('Link Copied!')" style="background: none; color: white; border: none; cursor: pointer;">📤 Share</button>
+            <button onclick="window.open('https://en.savefrom.net/','_blank')" style="background: #e50914; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">📥 Download</button>
+        </div>
+    </div>
+`;
+
+
+        } catch (error) {
+            console.log(error);
+            container.innerHTML = '<p style="color:red;">Net nahi chal raha ya Quota khatam! 🚫</p>';
+        }
+    }
+    // Ye code paste karo
+function filterCategory(term) {
+    document.getElementById('searchInput').value = term;
+    searchMovies();
+}
+// Ye line script tag band hone se pehle daal do
+window.onload = () => filterCategory('New South Indian Action Movie Hindi Dubbed');
+
+</script>
