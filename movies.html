@@ -169,7 +169,6 @@ footer {
         container.innerHTML = '<h3 style="color:white; text-align:center; margin-top:20px;">🍿 Popcorn ready kar raha hoon...</h3>';
 
         try {
-            // YouTube API ko call lagao
             const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=${encodeURIComponent(query)}&type=video&videoEmbeddable=true&key=${API_KEY}`;
             
         
@@ -210,15 +209,15 @@ footer {
         }
     }
 
-// 🔥 Ye function video play karta hai (Neeche wala updated code hai)
-function playVideo(element, videoId) {
-    element.innerHTML = `
-        <iframe width="100%" height="200" 
-        src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${window.location.origin}" 
-        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
-        style="border-radius:10px;">
-        </iframe>
-    `;
+// ✅ Isme '&origin=' add kiya hai taaki Error 153 hat jaye
+element.innerHTML = `
+    <iframe width="100%" height="200" 
+    src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${window.location.origin}" 
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
+    style="border-radius:10px;">
+    </iframe>
+`;
+    
 }
     
 </script>
