@@ -154,60 +154,62 @@ footer {
         searchMovies('New South Indian Hindi Dubbed Action Movies 2025');
     };
 
-    // 🔍 STEP 2: Movies search karne ka function
-    async function searchMovies(queryText) {
-        const inputVal = document.getElementById('searchInput').value;
-        const query = queryText || inputVal; // Agar button dabaya to wo, nahi to search box
-        const container = document.getElementById('movies-container');
+    // 🔍 STEP 2: Movies search karne ka function (Poora Naya Engine)
+async function searchMovies(queryText) {
+    const inputVal = document.getElementById('searchInput').value;
+    const query = queryText || inputVal;
+    const container = document.getElementById('movies-container');
 
-        if (!query) {
-            alert("Bhai, kuch likhoge tabhi toh dikhaunga! 😂");
+    if (!query) {
+        alert("Bhai, kuch likhoge tabhi toh dikhaunga! 😅");
+        return;
+    }
+
+    // Loading dikhao...
+    container.innerHTML = '<h3 style="color:white; text-align:center; margin-top:20px;">🍿 Popcorn ready kar raha hoon...</h3>';
+
+    try {
+        // ✅ Ye wahi 'Plus' (+) wala code hai jo fail nahi hoga
+        const url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=' + encodeURIComponent(query) + '&type=video&videoEmbeddable=true&key=' + API_KEY;
+
+        // 🚀 Ye lines shayad galti se delete ho gayi thi
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Agar koi error aaya
+        if (data.error) {
+            console.error("YouTube Error:", data.error);
+            container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Error: ' + data.error.message + '</p>';
             return;
         }
 
-        // Loading dikhao...
-        container.innerHTML = '<h3 style="color:white; text-align:center; margin-top:20px;">🍿 Popcorn ready kar raha hoon...</h3>';
+        container.innerHTML = ''; // Purana kachra saaf
 
-        try {
-            // ✅ Ye bina Backtick wala code hai. Isme galti nahi hogi.
-const url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=' + encodeURIComponent(query) + '&type=video&videoEmbeddable=true&key=' + API_KEY;
-            
-            const response = await fetch(url);
-            const data = await response.json();
+        // Har video ke liye card banao
+        data.items.forEach(item => {
+            const videoId = item.id.videoId;
+            const title = item.snippet.title;
+            const thumbnail = item.snippet.thumbnails.medium.url;
 
-            // Agar koi error aaya (Jaise Quota ya Key ka locha)
-            if (data.error) {
-                console.error("YouTube Error:", data.error);
-                container.innerHTML = `<p style="color:red; text-align:center;">⚠️ Error: ${data.error.message}</p>`;
-                return;
-            }
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            // Note: Neeche backticks (`) hi use honge, ye sahi hai
+            card.innerHTML = `
+                <div class="thumbnail-container" onclick="playVideo(this, '${videoId}')">
+                    <img src="${thumbnail}" alt="${title}" style="width:100%;">
+                    <div class="play-btn" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-size:50px; cursor:pointer;">▶</div>
+                </div>
+                <h4 style="color:white; font-size:14px; margin-top:10px;">${title}</h4>
+            `;
+            container.appendChild(card);
+        });
 
-            container.innerHTML = ''; // Purana kachra saaf
-
-            // Har video ke liye card banao
-            data.items.forEach(item => {
-                const videoId = item.id.videoId;
-                const title = item.snippet.title;
-                const thumbnail = item.snippet.thumbnails.medium.url; // High quality thumbnail
-
-                const card = document.createElement('div');
-                card.className = 'movie-card';
-                // Niche wala code thumbnail dikhayega, click karne par video chalega
-                card.innerHTML = `
-                    <div class="thumbnail-container" onclick="playVideo(this, '${videoId}')">
-                        <img src="${thumbnail}" alt="${title}" style="width:100%; border-radius:10px;">
-                        <div class="play-btn" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -5nirsj0%); font-size:50px; cursor:pointer;">▶️</div>
-                    </div>
-                    <h4 style="color:white; font-size:14px; margin-top:10px;">${title}</h4>
-                `;
-                container.appendChild(card);
-            });
-
-        } catch (error) {
-            console.error("Network Error:", error);
-            container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Internet check kar bhai!</p>';
-        }
+    } catch (error) {
+        console.error("Network Error:", error);
+        container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Internet ya Code ka locha hai bhai!</p>';
     }
+}
+    
 
 // ✅ Isme '&origin=' add kiya hai taaki Error 153 hat jaye
 element.innerHTML = `
