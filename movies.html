@@ -145,82 +145,78 @@ footer {
     <p>Desi Movies ka Adda - <span class="owner-name">Baba Cinema</span></p>
     <p>© 2026 | Made with ❤️ by the niraj </p>
 </footer>
-<script>
-    // 🔑 TERI ASLI CHABI (Direct aur Simple)
-    const API_KEY = 'AIzaSyBLNX9XaVAgvn9c87qkI458rdjagvO82bU'; 
+    <script>
+    // 🔑 STEP 1: API KEY (Ye rahi teri chabi)
+    const API_KEY = 'AIzaSyBLNX9XaVAgvn9c87qkI458rdjagvO82bU';
 
-    // 🚀 STEP 1: Page khulte hi apne aap movies load ho jayengi (Suggestion wapas aa gaya!)
+    // 🚀 STEP 2: Page load hone par apne aap movies layega
     window.onload = function() {
         searchMovies('New South Indian Hindi Dubbed Action Movies 2025');
     };
 
-    // 🔍 STEP 2: Movies search karne ka function (Poora Naya Engine)
-async function searchMovies(queryText) {
-    const inputVal = document.getElementById('searchInput').value;
-    const query = queryText || inputVal;
-    const container = document.getElementById('movies-container');
+    // 🔍 STEP 3: Movies search karne ka engine
+    async function searchMovies(queryText) {
+        const inputVal = document.getElementById('searchInput').value;
+        const query = queryText || inputVal;
+        const container = document.getElementById('movies-container');
 
-    if (!query) {
-        alert("Bhai, kuch likhoge tabhi toh dikhaunga! 😅");
-        return;
-    }
-
-    // Loading dikhao...
-    container.innerHTML = '<h3 style="color:white; text-align:center; margin-top:20px;">🍿 Popcorn ready kar raha hoon...</h3>';
-
-    try {
-        // ✅ Ye wahi 'Plus' (+) wala code hai jo fail nahi hoga
-        const url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=' + encodeURIComponent(query) + '&type=video&videoEmbeddable=true&key=' + API_KEY;
-
-        // 🚀 Ye lines shayad galti se delete ho gayi thi
-        const response = await fetch(url);
-        const data = await response.json();
-
-        // Agar koi error aaya
-        if (data.error) {
-            console.error("YouTube Error:", data.error);
-            container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Error: ' + data.error.message + '</p>';
+        if (!query) {
+            alert("Bhai, kuch likhoge tabhi toh dikhaunga! 😅");
             return;
         }
 
-        container.innerHTML = ''; // Purana kachra saaf
+        // Loading message
+        container.innerHTML = '<h3 style="color:white; text-align:center; margin-top:20px;">🍿 Popcorn ready kar raha hoon...</h3>';
 
-        // Har video ke liye card banao
-        data.items.forEach(item => {
-            const videoId = item.id.videoId;
-            const title = item.snippet.title;
-            const thumbnail = item.snippet.thumbnails.medium.url;
+        try {
+            // ✅ URL banane ka simple tareeka (Bina Backticks ke)
+            const url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=' + encodeURIComponent(query) + '&type=video&videoEmbeddable=true&key=' + API_KEY;
 
-            const card = document.createElement('div');
-            card.className = 'movie-card';
-            // Note: Neeche backticks (`) hi use honge, ye sahi hai
-            card.innerHTML = `
-                <div class="thumbnail-container" onclick="playVideo(this, '${videoId}')">
-                    <img src="${thumbnail}" alt="${title}" style="width:100%;">
-                    <div class="play-btn" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-size:50px; cursor:pointer;">▶</div>
-                </div>
-                <h4 style="color:white; font-size:14px; margin-top:10px;">${title}</h4>
-            `;
-            container.appendChild(card);
-        });
+            const response = await fetch(url);
+            const data = await response.json();
 
-    } catch (error) {
-        console.error("Network Error:", error);
-        container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Internet ya Code ka locha hai bhai!</p>';
+            if (data.error) {
+                console.error("YouTube Error:", data.error);
+                container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Error: ' + data.error.message + '</p>';
+                return;
+            }
+
+            container.innerHTML = ''; // Purana kachra saaf
+
+            data.items.forEach(item => {
+                const videoId = item.id.videoId;
+                const title = item.snippet.title;
+                const thumbnail = item.snippet.thumbnails.medium.url;
+
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                
+                // Card ka HTML
+                card.innerHTML = `
+                    <div class="thumbnail-container" onclick="playVideo(this, '${videoId}')">
+                        <img src="${thumbnail}" alt="${title}" style="width:100%;">
+                        <div class="play-btn" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-size:50px; cursor:pointer;">▶</div>
+                    </div>
+                    <h4 style="color:white; font-size:14px; margin-top:10px;">${title}</h4>
+                `;
+                container.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error("Network Error:", error);
+            container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Internet ya Code ka locha hai bhai!</p>';
+        }
     }
-}
-    
 
-// ✅ Isme '&origin=' add kiya hai taaki Error 153 hat jaye
-element.innerHTML = `
-    <iframe width="100%" height="200" 
-    src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${window.location.origin}" 
-    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
-    style="border-radius:10px;">
-    </iframe>
-`;
+    // 🎬 STEP 4: Video Play karne ka function
+    function playVideo(element, videoId) {
+        element.innerHTML = `
+            <iframe width="100%" height="200" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${window.location.origin}" 
+            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
+            style="border-radius:10px;">
+            </iframe>
+        `;
+    }
+    </script>
     
-}
-    alert("Code Zinda Hai!");
-    
-</script>
