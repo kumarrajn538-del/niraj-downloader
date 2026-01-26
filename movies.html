@@ -208,15 +208,17 @@ footer {
         }
     }
 
-    // 🎬 STEP 4: Video Play karne ka function
-    function playVideo(element, videoId) {
-        element.innerHTML = `
-            <iframe width="100%" height="200" 
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${window.location.origin}" 
-            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
-            style="border-radius:10px;">
-            </iframe>
-        `;
-    }
+    // 🔥 Stealth Mode Player (YouTube ko pata nahi chalega request kahan se aayi)
+function playVideo(element, videoId) {
+    element.innerHTML = `
+        <iframe width="100%" height="200" 
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
+        referrerpolicy="no-referrer"
+        style="border-radius:10px;">
+        </iframe>
+    `;
+}
+        
     </script>
     
