@@ -207,17 +207,26 @@ footer {
             container.innerHTML = '<p style="color:red; text-align:center;">⚠️ Internet ya Code ka locha hai bhai!</p>';
         }
     }
-// 🔥 BILKUL SIMPLE PLAYER (Sab videos chalenge)
+
+        // 🔥 SMART PLAYER: Jo har halat mein chalega!
 function playVideo(element, videoId) {
     element.innerHTML = `
-        <iframe width="100%" height="200" 
-        src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
-        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
-        style="border-radius:10px;">
-        </iframe>
+        <div style="background:#1a1a1a; border-radius:10px; padding:5px; text-align:center; border: 1px solid #333;">
+            <iframe width="100%" height="200" 
+                src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen 
+                style="border-radius:10px; background:#000;">
+            </iframe>
+            <div style="margin: 10px 0 5px 0;">
+                <p style="color:#bbb; font-size:12px; margin-bottom:8px;">Agar Error aaye toh neeche click karein 👇</p>
+                <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" 
+                   style="background:#ff0000; color:#ffffff; padding:8px 20px; text-decoration:none; border-radius:20px; font-weight:bold; display:inline-block; font-size:14px; box-shadow: 0 4px 15px rgba(255,0,0,0.3);">
+                   Open in YouTube App ▶
+                </a>
+            </div>
+        </div>
     `;
 }
-        
         
     </script>
     
